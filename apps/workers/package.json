@@ -1,0 +1,28 @@
+{
+  "name": "@hostdaddy/workers",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --port 8787",
+    "build": "tsc --noEmit",
+    "deploy": "wrangler deploy",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf .turbo .wrangler dist"
+  },
+  "dependencies": {
+    "@hostdaddy/cloudflare": "workspace:*",
+    "@hostdaddy/db": "workspace:*",
+    "@hostdaddy/stripe": "workspace:*",
+    "hono": "^4.5.10",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240821.1",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5",
+    "wrangler": "^3.74.0"
+  }
+}

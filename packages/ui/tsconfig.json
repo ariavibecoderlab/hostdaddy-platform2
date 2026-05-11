@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "outDir": "dist",
+    "noEmit": true
+  },
+  "include": ["src/**/*", "tailwind-preset.ts"],
+  "exclude": ["node_modules", "dist"]
+}

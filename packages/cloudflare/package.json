@@ -1,0 +1,27 @@
+{
+  "name": "@hostdaddy/cloudflare",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./registrar": "./src/registrar.ts",
+    "./dns": "./src/dns.ts",
+    "./pages": "./src/pages.ts",
+    "./email": "./src/email.ts",
+    "./mynic": "./src/mynic.ts"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf .turbo dist"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  }
+}

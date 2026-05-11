@@ -1,0 +1,20 @@
+{
+  "name": "@hostdaddy/stripe",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .turbo dist"
+  },
+  "dependencies": {
+    "stripe": "^16.9.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}

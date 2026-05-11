@@ -1,0 +1,43 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# build outputs
+dist/
+build/
+.next/
+.turbo/
+.wrangler/
+coverage/
+*.tsbuildinfo
+
+# env files
+.env
+.env.local
+.env.*.local
+.dev.vars
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# vercel / cloudflare
+.vercel
+.cloudflare/
+
+# temp
+tmp/
+.cache/
+_tmp_*

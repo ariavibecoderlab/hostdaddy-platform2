@@ -1,0 +1,53 @@
+# HostDaddy.ai Workers — apps/workers
+# Deploys to api.hostdaddy.ai once the route is bound in Cloudflare dashboard.
+
+name = "hostdaddy-api"
+main = "src/index.ts"
+compatibility_date = "2026-05-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+# ── Routes (set after DNS for hostdaddy.ai is in CF) ─────────────────────────
+# routes = [
+#   { pattern = "api.hostdaddy.ai/*", zone_name = "hostdaddy.ai" }
+# ]
+
+# ── Environment variables (non-secret) ───────────────────────────────────────
+[vars]
+NODE_ENV = "production"
+APP_URL = "https://hostdaddy.ai"
+
+# ── D1 binding ───────────────────────────────────────────────────────────────
+# Replace database_id with the value from HOSTDADDY_ACCOUNT_SETUP.md §1.5
+[[d1_databases]]
+binding = "DB"
+database_name = "hostdaddy-prod"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+# ── KV (sessions / cache) ────────────────────────────────────────────────────
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# ── R2 (assets) ──────────────────────────────────────────────────────────────
+[[r2_buckets]]
+binding = "ASSETS"
+bucket_name = "hostdaddy-assets"
+
+# ── Cron Triggers (Phase 6: renewal reminders) ───────────────────────────────
+[triggers]
+crons = [
+  "0 8 * * *"   # daily 08:00 UTC — sends 60/30/14/7-day renewal reminders
+]
+
+# ── Secrets (set with `wrangler secret put NAME`) ────────────────────────────
+# CLOUDFLARE_ACCOUNT_ID
+# CLOUDFLARE_API_TOKEN
+# JWT_SECRET
+# STRIPE_SECRET_KEY
+# STRIPE_WEBHOOK_SECRET
+# BILLPLZ_API_KEY
+# BILLPLZ_X_SIGNATURE_KEY
+# RESEND_API_KEY
+# EXABYTES_API_KEY
+# EXABYTES_RESELLER_ID
