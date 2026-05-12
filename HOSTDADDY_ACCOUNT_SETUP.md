@@ -77,22 +77,21 @@ This is the master infrastructure account. Everything else depends on it.
 
 ## 2. GitHub — BLOCKING (Phase 1)
 
-### 2.1 Create the GitHub organisation
-- Go to https://github.com/organizations/new
-- Org name: `hostdaddy-ai` (or `hostdaddy`)
-- Plan: Free
-- Add yourself as owner
+### 2.1 GitHub organisation
+- Using existing org: `ariavibecoderlab`
+- Make sure you have Owner access
 
-### 2.2 Create the repository
-- Inside the org → **New repository**
-- Name: `hostdaddy-platform`
-- Private
-- **Do not** initialize with README (we'll push the scaffold)
-- Copy the SSH URL: `git@github.com:hostdaddy-ai/hostdaddy-platform.git`
+### 2.2 Repository
+- Repo: **`ariavibecoderlab/hostdaddy-platform2`** (already created)
+- URL: https://github.com/ariavibecoderlab/hostdaddy-platform2
+- SSH: `git@github.com:ariavibecoderlab/hostdaddy-platform2.git`
+- HTTPS: `https://github.com/ariavibecoderlab/hostdaddy-platform2.git`
+
+> Note: The original `hostdaddy-platform` (without "2") contained an unrelated Vite/Supabase scaffold from a different tool. We're working in `hostdaddy-platform2` for the authoritative Next.js + Cloudflare build.
 
 ### 2.3 Connect Cloudflare Pages auto-deploy
 - In Cloudflare → **Workers & Pages → Create application → Pages → Connect to Git**
-- Authorize Cloudflare GitHub App for the `hostdaddy-ai` org → repo `hostdaddy-platform`
+- Authorize Cloudflare GitHub App for the `ariavibecoderlab` org → repo `hostdaddy-platform2`
 - **Project name:** `hostdaddy-web`
 - **Production branch:** `main`
 - **Framework preset:** Next.js
@@ -214,8 +213,8 @@ CLOUDFLARE_ACCOUNT_ID=...
 CLOUDFLARE_API_TOKEN=...
 D1_DATABASE_ID=...
 KV_NAMESPACE_ID=...
-GITHUB_ORG=hostdaddy-ai
-GITHUB_REPO=hostdaddy-platform
+GITHUB_ORG=ariavibecoderlab
+GITHUB_REPO=hostdaddy-platform2
 ```
 
 Claude will wire those into `wrangler.toml`, GitHub Actions, and the Pages project, then we move to Phase 2.

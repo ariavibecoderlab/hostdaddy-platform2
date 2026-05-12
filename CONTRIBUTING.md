@@ -23,8 +23,8 @@ We use **pnpm**, not npm or yarn. Don't mix them — you'll desync the lockfile.
 ## 2. Get the code
 
 ```bash
-git clone git@github.com:hostdaddy-ai/hostdaddy-platform.git
-cd hostdaddy-platform
+git clone git@github.com:ariavibecoderlab/hostdaddy-platform2.git
+cd hostdaddy-platform2
 pnpm install
 ```
 
