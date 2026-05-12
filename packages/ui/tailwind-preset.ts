@@ -56,6 +56,7 @@ const preset = {
       },
       fontFamily: {
         sans: [
+          'var(--font-inter)',
           'Inter',
           'ui-sans-serif',
           'system-ui',
@@ -67,6 +68,7 @@ const preset = {
           'sans-serif',
         ],
         display: [
+          'var(--font-inter)',
           'Inter',
           'ui-sans-serif',
           'system-ui',

@@ -1,18 +1,21 @@
 import { SiteNav } from '@/components/site-nav';
-import { SiteFooter } from '@/components/site-footer';
-import { HeroSearch } from '@/components/hero-search';
+import { SearchBand } from '@/components/search-band';
+import { HeroPromo } from '@/components/hero-promo';
 import { TrustBar } from '@/components/trust-bar';
 import { ProductCards } from '@/components/product-cards';
 import { PricingPlans } from '@/components/pricing-plans';
 import { FeatureTiles } from '@/components/feature-tiles';
 import { BrainyBunchBanner } from '@/components/brainy-bunch-banner';
+import { SiteFooter } from '@/components/site-footer';
+import { SupportChat } from '@/components/support-chat';
 
 export default function HomePage() {
   return (
     <>
       <SiteNav />
+      <SearchBand />
       <main>
-        <HeroSearch />
+        <HeroPromo />
         <TrustBar />
         <ProductCards />
         <PricingPlans />
@@ -20,6 +23,7 @@ export default function HomePage() {
         <BrainyBunchBanner />
       </main>
       <SiteFooter />
+      <SupportChat />
     </>
   );
 }

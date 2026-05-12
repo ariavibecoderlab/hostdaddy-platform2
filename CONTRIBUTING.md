@@ -57,10 +57,12 @@ pnpm dev
 ```
 
 That starts both:
-- **Web** on http://localhost:3000 — Next.js marketing site + customer dashboard
+- **Web** on http://localhost:5173 — Next.js marketing site + customer dashboard
 - **Workers** on http://localhost:8787 — Hono API, runs against local D1 via Wrangler
 
-Open http://localhost:3000 and you should see the homepage.
+> Note: macOS uses port 5000 for AirPlay Receiver by default. We picked 5173 to avoid that conflict and to avoid stepping on the user's Jarvis project on :3000.
+
+Open http://localhost:5173 and you should see the homepage.
 
 To run just one:
 

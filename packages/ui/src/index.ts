@@ -1,6 +1,6 @@
-export { cn } from './utils.js';
-export { Button, buttonVariants, type ButtonProps } from './button.js';
-export { Input, type InputProps } from './input.js';
+export { cn } from './utils';
+export { Button, buttonVariants, type ButtonProps } from './button';
+export { Input, type InputProps } from './input';
 export {
   Card,
   CardHeader,
@@ -8,8 +8,8 @@ export {
   CardDescription,
   CardContent,
   CardFooter,
-} from './card.js';
-export { Badge, type BadgeProps } from './badge.js';
+} from './card';
+export { Badge, type BadgeProps } from './badge';
 export {
   Table,
   TableHeader,
@@ -17,12 +17,12 @@ export {
   TableRow,
   TableHead,
   TableCell,
-} from './table.js';
+} from './table';
 export {
   Dialog,
   DialogHeader,
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from './dialog.js';
-export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs.js';
+} from './dialog';
+export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs';

@@ -1,16 +1,21 @@
 import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
 import '@hostdaddy/ui/styles.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
   title: {
-    default: 'HostDaddy.ai — Your Domain. Your Brand. Your Growth.',
+    default: 'HostDaddy.ai — Domains, hosting, and AI-built sites. Built for growth.',
     template: '%s · HostDaddy.ai',
   },
   description:
-    'Register domains, host websites, and grow your business — all in one place. Built on Cloudflare for speed and reliability. Halal & trusted.',
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? 'https://hostdaddy.ai',
-  ),
+    'Register domains, host websites, and grow your business — all in one place. Built on Cloudflare for speed and reliability. Halal & trusted. Fair renewal pricing forever.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://hostdaddy.ai'),
   openGraph: {
     type: 'website',
     siteName: 'HostDaddy.ai',
@@ -28,8 +33,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-white text-navy-900 antialiased">
+    <html lang="en" className={inter.variable}>
+      <body className="min-h-screen bg-white font-sans text-navy-900 antialiased">
         {children}
       </body>
     </html>

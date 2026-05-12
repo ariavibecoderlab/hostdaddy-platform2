@@ -1,6 +1,7 @@
 /**
- * Strongly-typed Worker environment.
- * Anything in wrangler.toml `[vars]` or registered as a secret should appear here.
+ * Strongly-typed Worker environment + Hono context variables.
+ * Anything in wrangler.toml `[vars]` or registered as a secret should appear in Env.
+ * Anything attached to a request (auth user, session id) goes in Variables.
  */
 
 export interface Env {
@@ -26,5 +27,18 @@ export interface Env {
   EXABYTES_RESELLER_ID?: string;
 }
 
-/** Hono `c.env` typing helper. */
-export type AppBindings = { Bindings: Env };
+/** Authenticated session info attached to the request context after middleware/auth. */
+export interface AuthUser {
+  customerId: string;
+  email: string;
+  role: 'customer' | 'franchisee' | 'agency' | 'admin';
+  sessionId: string; // JWT jti — matches a row in sessions table + KV revocation key
+}
+
+/** Hono `c.env` + `c.var` typing. */
+export type AppBindings = {
+  Bindings: Env;
+  Variables: {
+    user?: AuthUser;
+  };
+};

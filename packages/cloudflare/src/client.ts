@@ -2,7 +2,7 @@ import {
   CloudflareApiError,
   type CloudflareApiResponse,
   type CloudflareConfig,
-} from './types.js';
+} from './types';
 
 const DEFAULT_BASE_URL = 'https://api.cloudflare.com/client/v4';
 

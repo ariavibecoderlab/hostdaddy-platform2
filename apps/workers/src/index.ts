@@ -11,8 +11,10 @@ import { logger } from 'hono/logger';
 import { secureHeaders } from 'hono/secure-headers';
 import { createCloudflare } from '@hostdaddy/cloudflare';
 import { createDb } from '@hostdaddy/db';
-import type { AppBindings, Env } from './env.js';
-import { domainsRoute } from './routes/domains.js';
+import type { AppBindings, Env } from './env';
+import { domainsRoute } from './routes/domains';
+import { authRoute } from './routes/auth';
+import { optionalAuth } from './middleware/auth';
 
 const app = new Hono<AppBindings>();
 
@@ -23,8 +25,8 @@ app.use(
   cors({
     origin: (origin, c) => {
       const env = c.env as Env;
-      const appUrl = env.APP_URL ?? 'http://localhost:3000';
-      const allowed = new Set([appUrl, 'http://localhost:3000']);
+      const appUrl = env.APP_URL ?? 'http://localhost:5173';
+      const allowed = new Set([appUrl, 'http://localhost:5173']);
       return origin && allowed.has(origin) ? origin : appUrl;
     },
     credentials: true,
@@ -41,7 +43,11 @@ app.get('/health', (c) =>
   }),
 );
 
+// ─── Auth-aware middleware (populates c.var.user when cookie is valid) ─────
+app.use('*', optionalAuth);
+
 // ─── Routes ────────────────────────────────────────────────────────────────
+app.route('/auth', authRoute);
 app.route('/domains', domainsRoute);
 
 // 404

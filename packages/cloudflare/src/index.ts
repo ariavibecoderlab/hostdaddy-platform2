@@ -8,13 +8,13 @@
  *   await cf.dns.createRecord(zone.id, { type: 'A', name: '@', content: '1.2.3.4' });
  */
 
-import { CloudflareClient } from './client.js';
-import { RegistrarClient } from './registrar.js';
-import { DnsClient } from './dns.js';
-import { PagesClient } from './pages.js';
-import { EmailRoutingClient } from './email.js';
-import { MynicClient, type MynicConfig } from './mynic.js';
-import type { CloudflareConfig } from './types.js';
+import { CloudflareClient } from './client';
+import { RegistrarClient } from './registrar';
+import { DnsClient } from './dns';
+import { PagesClient } from './pages';
+import { EmailRoutingClient } from './email';
+import { MynicClient, type MynicConfig } from './mynic';
+import type { CloudflareConfig } from './types';
 
 export interface HostDaddyCloudflare {
   client: CloudflareClient;
@@ -43,43 +43,43 @@ export function createCloudflare(input: CreateCloudflareInput): HostDaddyCloudfl
 }
 
 // Re-export types and individual clients for callers who want them.
-export { CloudflareClient } from './client.js';
-export { RegistrarClient } from './registrar.js';
-export { DnsClient } from './dns.js';
-export { PagesClient } from './pages.js';
-export { EmailRoutingClient } from './email.js';
-export { MynicClient } from './mynic.js';
+export { CloudflareClient } from './client';
+export { RegistrarClient } from './registrar';
+export { DnsClient } from './dns';
+export { PagesClient } from './pages';
+export { EmailRoutingClient } from './email';
+export { MynicClient } from './mynic';
 export {
   CloudflareApiError,
   type CloudflareConfig,
   type CloudflareApiResponse,
   type CloudflareError,
-} from './types.js';
+} from './types';
 export type {
   CloudflareDomain,
   ContactInfo,
   DomainPricing,
-} from './registrar.js';
+} from './registrar';
 export type {
   DnsZone,
   DnsRecord,
   DnsRecordType,
   CreateDnsRecordInput,
-} from './dns.js';
+} from './dns';
 export type {
   PagesProject,
   PagesDeployment,
   PagesDomain,
   PagesDeploymentConfig,
-} from './pages.js';
+} from './pages';
 export type {
   EmailRoutingSettings,
   EmailRoutingAddress,
   EmailRoutingRule,
   EmailMatcher,
   EmailAction,
-} from './email.js';
-export type { MynicConfig, MynicDomainStatus } from './mynic.js';
+} from './email';
+export type { MynicConfig, MynicDomainStatus } from './mynic';
 
 /**
  * Helper: list of TLDs supported by Cloudflare Registrar (Stage 1).

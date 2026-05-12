@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 5173",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 5173",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf .turbo .next dist"

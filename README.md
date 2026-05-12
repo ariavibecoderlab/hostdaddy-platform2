@@ -57,7 +57,7 @@ pnpm install
 cp .env.example .env.local
 #    ↳ fill in CLOUDFLARE_* values from HOSTDADDY_ACCOUNT_SETUP.md
 
-# 3. Run dev (web on :3000, workers on :8787)
+# 3. Run dev (web on :5173, workers on :8787)
 pnpm dev
 
 # 4. Typecheck the whole monorepo

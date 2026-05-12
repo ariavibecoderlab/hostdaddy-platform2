@@ -8,7 +8,7 @@
  */
 
 import { drizzle, type DrizzleD1Database } from 'drizzle-orm/d1';
-import * as schema from './schema.js';
+import * as schema from './schema';
 
 export type HostDaddyDb = DrizzleD1Database<typeof schema>;
 
@@ -16,7 +16,7 @@ export function createDb(d1: D1Database): HostDaddyDb {
   return drizzle(d1, { schema });
 }
 
-export * from './schema.js';
+export * from './schema';
 export { schema };
 
 /** Re-export convenience operators for callers. */

@@ -17,6 +17,7 @@
     "@hostdaddy/db": "workspace:*",
     "@hostdaddy/stripe": "workspace:*",
     "hono": "^4.5.10",
+    "jose": "^5.9.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {

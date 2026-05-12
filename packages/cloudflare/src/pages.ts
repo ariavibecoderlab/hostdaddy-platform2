@@ -1,4 +1,4 @@
-import type { CloudflareClient } from './client.js';
+import type { CloudflareClient } from './client';
 
 /**
  * Cloudflare Pages API.

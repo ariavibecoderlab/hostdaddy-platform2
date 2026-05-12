@@ -8,7 +8,7 @@
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { createCloudflare, SUPPORTED_TLDS, type SupportedTld } from '@hostdaddy/cloudflare';
-import type { AppBindings } from '../env.js';
+import type { AppBindings } from '../env';
 
 export const domainsRoute = new Hono<AppBindings>();
 
