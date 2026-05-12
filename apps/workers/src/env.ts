@@ -20,9 +20,23 @@ export interface Env {
   JWT_SECRET: string;
   STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
+  // Stripe Price IDs (one per plan × cycle)
+  STRIPE_PRICE_STARTER_MONTHLY?: string;
+  STRIPE_PRICE_STARTER_YEARLY?: string;
+  STRIPE_PRICE_BUSINESS_MONTHLY?: string;
+  STRIPE_PRICE_BUSINESS_YEARLY?: string;
+  STRIPE_PRICE_AGENCY_MONTHLY?: string;
+  STRIPE_PRICE_AGENCY_YEARLY?: string;
+  STRIPE_PRICE_BB_MONTHLY?: string;
+  STRIPE_PRICE_BB_YEARLY?: string;
+  // Billplz
   BILLPLZ_API_KEY: string;
+  BILLPLZ_COLLECTION_ID?: string;
   BILLPLZ_X_SIGNATURE_KEY: string;
+  BILLPLZ_BASE_URL?: string; // override for sandbox testing
+  // Resend
   RESEND_API_KEY: string;
+  // MYNIC reseller
   EXABYTES_API_KEY?: string;
   EXABYTES_RESELLER_ID?: string;
 }

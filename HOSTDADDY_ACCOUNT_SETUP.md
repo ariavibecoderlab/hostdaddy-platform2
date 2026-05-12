@@ -1,4 +1,4 @@
-# HostDaddy.ai — Account Setup Checklist
+# HostDaddy.app — Account Setup Checklist
 
 > Work through this list while Claude scaffolds the codebase in parallel.
 > Anything marked **BLOCKING** is needed before Phase 1 ships. Anything marked **DEFERRABLE** can wait until the relevant phase.
@@ -12,7 +12,7 @@ This is the master infrastructure account. Everything else depends on it.
 
 ### 1.1 Create Cloudflare account
 - Go to https://dash.cloudflare.com/sign-up
-- Sign up with `admin@hostdaddy.ai` (or your preferred ops email)
+- Sign up with `admin@hostdaddy.app` (or your preferred ops email)
 - Verify email → log in
 - **Plan:** start on Free. Upgrade to Pro (USD 20/mo) before public launch for advanced rate limiting and image resizing.
 
@@ -22,7 +22,7 @@ This is the master infrastructure account. Everything else depends on it.
 
 ### 1.3 Create the API Token (correct scopes are critical)
 - Go to **My Profile → API Tokens → Create Token → Custom token**
-- Name: `HostDaddy.ai Platform Token`
+- Name: `HostDaddy.app Platform Token`
 - **Permissions** (add each row):
   - **Account** — `Cloudflare Pages` — **Edit**
   - **Account** — `D1` — **Edit**
@@ -71,7 +71,7 @@ This is the master infrastructure account. Everything else depends on it.
 - Copy the **Namespace ID** → paste into `.env.local` as `KV_NAMESPACE_ID=...`
 
 ### 1.8 Enable Email Routing on the test domain
-- We'll do this per-customer-domain via API, but enable it once on `hostdaddy.ai` itself: **Email → Email Routing → Enable**.
+- We'll do this per-customer-domain via API, but enable it once on `hostdaddy.app` itself: **Email → Email Routing → Enable**.
 
 ---
 
@@ -120,7 +120,7 @@ This is the master infrastructure account. Everything else depends on it.
   - Copy `Publishable key` → `STRIPE_PUBLISHABLE_KEY=...`
   - Copy `Secret key` → `STRIPE_SECRET_KEY=...`
 - **Developers → Webhooks → Add endpoint** (do this AFTER apps/workers is deployed):
-  - URL: `https://api.hostdaddy.ai/webhooks/stripe`
+  - URL: `https://api.hostdaddy.app/webhooks/stripe`
   - Events: `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid`, `invoice.payment_failed`
   - Copy `Signing secret` → `STRIPE_WEBHOOK_SECRET=...`
 
@@ -131,15 +131,15 @@ This is the master infrastructure account. Everything else depends on it.
 - https://www.billplz.com/enterprise/register
 - Verify business with SSM cert
 - **Settings → API Key:** copy → `BILLPLZ_API_KEY=...`
-- **Collections → Create collection** for HostDaddy.ai → copy `BILLPLZ_COLLECTION_ID=...`
-- Webhook (after deploy): `https://api.hostdaddy.ai/webhooks/billplz`
+- **Collections → Create collection** for HostDaddy.app → copy `BILLPLZ_COLLECTION_ID=...`
+- Webhook (after deploy): `https://api.hostdaddy.app/webhooks/billplz`
 
 ---
 
 ## 5. Resend (transactional email) — BLOCKING (Phase 2)
 
 - https://resend.com/signup
-- **Domains → Add Domain** → `hostdaddy.ai`
+- **Domains → Add Domain** → `hostdaddy.app`
 - Add the SPF, DKIM, MX records that Resend gives you to Cloudflare DNS
 - Wait for verification (usually < 5 min)
 - **API Keys → Create API Key**
@@ -161,7 +161,7 @@ This is the master infrastructure account. Everything else depends on it.
 
 - https://www.tawk.to/
 - Free signup
-- Create property: HostDaddy.ai
+- Create property: HostDaddy.app
 - **Administration → Property Settings → Property ID** → `TAWK_PROPERTY_ID=...`
 - **Widget code → Widget ID** → `TAWK_WIDGET_ID=...`
 - We'll embed in Phase 7 polish.
@@ -190,14 +190,14 @@ Use Option B for launch unless you already have a MYNIC relationship.
 
 - https://mintlify.com/
 - Sign up, Pro plan USD 150/mo
-- Create site `help.hostdaddy.ai`
+- Create site `help.hostdaddy.app`
 - We'll point a CNAME at it during Phase 7.
 
 ---
 
-## 10. Domain registration for hostdaddy.ai itself
+## 10. Domain registration for hostdaddy.app itself
 
-- Once Cloudflare Registrar is active (§1.4), search for `hostdaddy.ai` directly inside Cloudflare → Domains → Register
+- Once Cloudflare Registrar is active (§1.4), search for `hostdaddy.app` directly inside Cloudflare → Domains → Register
 - Or, if already registered elsewhere, use the in-product transfer flow (5–7 days)
 - Set nameservers to Cloudflare's once moved
 - Enable Email Routing (§1.8)

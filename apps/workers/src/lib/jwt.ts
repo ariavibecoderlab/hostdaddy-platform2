@@ -7,8 +7,8 @@
 
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 
-const ISSUER = 'hostdaddy.ai';
-const AUDIENCE = 'hostdaddy.ai/web';
+const ISSUER = 'hostdaddy.app';
+const AUDIENCE = 'hostdaddy.app/web';
 const ACCESS_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
 const ALGORITHM = 'HS256';
 

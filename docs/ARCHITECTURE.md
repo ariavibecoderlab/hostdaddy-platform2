@@ -1,4 +1,4 @@
-# HostDaddy.ai — Architecture
+# HostDaddy.app — Architecture
 
 A reference for engineers joining the project. The source of truth for product decisions is `HostDaddy_AI_Build_Specification.docx` at the repo root. This doc explains *how the code is wired* — what each piece does and how requests flow through the system.
 
@@ -6,7 +6,7 @@ A reference for engineers joining the project. The source of truth for product d
 
 ## 1. The product in one paragraph
 
-HostDaddy.ai is a domain registrar + web host + email forwarder + AI site builder, built entirely on Cloudflare. Customers search for a domain → buy it → it auto-provisions a DNS zone, a Cloudflare Pages project, and email routing — all within a single Cloudflare master account. The customer sees a clean dashboard; we see one bill from Cloudflare.
+HostDaddy.app is a domain registrar + web host + email forwarder + AI site builder, built entirely on Cloudflare. Customers search for a domain → buy it → it auto-provisions a DNS zone, a Cloudflare Pages project, and email routing — all within a single Cloudflare master account. The customer sees a clean dashboard; we see one bill from Cloudflare.
 
 Three customer segments power the unit economics:
 1. **Brainy Bunch franchisees** — mandatory bundle, ~130 schools, RM 6,370 MRR floor on day 1
@@ -41,7 +41,7 @@ Why Turborepo + pnpm: incremental builds, shared TS config, one lockfile, zero c
 We run **one master Cloudflare account**. Every customer's resources (DNS zone, Pages project, email routing rules) live under it. Customers never log into Cloudflare — they only see our dashboard.
 
 ```
-HostDaddy.ai master Cloudflare account
+HostDaddy.app master Cloudflare account
 ├── Registrar
 │   ├── customer1.com
 │   ├── customer2.net
@@ -70,13 +70,13 @@ This is the trade-off we took for simplicity. It scales to ~50k customers before
 This is the canonical end-to-end flow. Most other operations are simpler subsets.
 
 ```
-1. User hits hostdaddy.ai homepage
+1. User hits hostdaddy.app homepage
    → Next.js (Cloudflare Pages) renders <HeroSearch>
 
 2. User types "mybrand" + Enter
    → Router pushes /search?q=mybrand
 
-3. /search page calls GET api.hostdaddy.ai/domains/check?q=mybrand
+3. /search page calls GET api.hostdaddy.app/domains/check?q=mybrand
    → apps/workers/src/routes/domains.ts
    → packages/cloudflare → Registrar API for each TLD in SUPPORTED_TLDS
    → Returns availability + RM pricing
@@ -89,7 +89,7 @@ This is the canonical end-to-end flow. Most other operations are simpler subsets
    → Stripe returns checkout URL → 302 redirect
 
 6. Stripe webhook fires checkout.session.completed
-   → POST api.hostdaddy.ai/webhooks/stripe
+   → POST api.hostdaddy.app/webhooks/stripe
    → packages/stripe.constructEvent() verifies signature
    → Insert invoice row, mark paid
    → Enqueue provisioning job
@@ -242,7 +242,7 @@ Two pipelines, both triggered by push to `main`:
 **Workers** — GitHub Actions runs `wrangler deploy`
 - See `.github/workflows/deploy.yml`
 - Secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` (set in repo Settings → Secrets)
-- Deploys to `hostdaddy-api.workers.dev` until DNS is pointed at `api.hostdaddy.ai`
+- Deploys to `hostdaddy-api.workers.dev` until DNS is pointed at `api.hostdaddy.app`
 
 Both run typecheck first; a failing typecheck blocks deploy.
 

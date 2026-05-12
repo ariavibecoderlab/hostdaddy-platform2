@@ -19,13 +19,13 @@ export function SiteNav() {
           <Link
             href="/"
             className="flex items-center gap-2 font-display text-lg font-bold text-white"
-            aria-label="HostDaddy.ai home"
+            aria-label="HostDaddy.app home"
           >
             <span
               className="inline-block h-6 w-6 rounded-md bg-gradient-to-br from-electric-500 to-cyan-500"
               aria-hidden
             />
-            HostDaddy<span className="text-cyan-400">.ai</span>
+            HostDaddy<span className="text-cyan-400">.app</span>
           </Link>
           <nav
             className="hidden items-center gap-6 lg:flex"

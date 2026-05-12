@@ -1,5 +1,5 @@
-# HostDaddy.ai Workers — apps/workers
-# Deploys to api.hostdaddy.ai once the route is bound in Cloudflare dashboard.
+# HostDaddy.app Workers — apps/workers
+# Deploys to api.hostdaddy.app once the route is bound in Cloudflare dashboard.
 
 name = "hostdaddy-api"
 main = "src/index.ts"
@@ -7,15 +7,15 @@ compatibility_date = "2026-05-01"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
 
-# ── Routes (set after DNS for hostdaddy.ai is in CF) ─────────────────────────
+# ── Routes (set after DNS for hostdaddy.app is in CF) ─────────────────────────
 # routes = [
-#   { pattern = "api.hostdaddy.ai/*", zone_name = "hostdaddy.ai" }
+#   { pattern = "api.hostdaddy.app/*", zone_name = "hostdaddy.app" }
 # ]
 
 # ── Environment variables (non-secret) ───────────────────────────────────────
 [vars]
 NODE_ENV = "production"
-APP_URL = "https://hostdaddy.ai"
+APP_URL = "https://hostdaddy.app"
 
 # ── D1 binding ───────────────────────────────────────────────────────────────
 # Replace database_id with the value from HOSTDADDY_ACCOUNT_SETUP.md §1.5

@@ -10,16 +10,16 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'HostDaddy.ai — Domains, hosting, and AI-built sites. Built for growth.',
-    template: '%s · HostDaddy.ai',
+    default: 'HostDaddy.app — Domains, hosting, and AI-built sites. Built for growth.',
+    template: '%s · HostDaddy.app',
   },
   description:
     'Register domains, host websites, and grow your business — all in one place. Built on Cloudflare for speed and reliability. Halal & trusted. Fair renewal pricing forever.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://hostdaddy.ai'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://hostdaddy.app'),
   openGraph: {
     type: 'website',
-    siteName: 'HostDaddy.ai',
-    title: 'HostDaddy.ai — Your Domain. Your Brand. Your Growth.',
+    siteName: 'HostDaddy.app',
+    title: 'HostDaddy.app — Your Domain. Your Brand. Your Growth.',
     description:
       'Register domains, host websites, and grow your business — all in one place.',
   },

@@ -14,7 +14,7 @@ REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
 echo "════════════════════════════════════════════════════════════"
-echo "  HostDaddy.ai — repo bootstrap"
+echo "  HostDaddy.app — repo bootstrap"
 echo "════════════════════════════════════════════════════════════"
 echo "Working in: $REPO_ROOT"
 echo ""
@@ -48,7 +48,7 @@ echo "    → $STAGED files staged"
 
 # 6. Commit
 echo "[5/6] Creating initial commit..."
-git commit -m "Phase 1 scaffold — HostDaddy.ai monorepo foundation
+git commit -m "Phase 1 scaffold — HostDaddy.app monorepo foundation
 
 - Turborepo + pnpm workspace (apps/web, apps/workers, 4 packages)
 - packages/cloudflare: typed Registrar/DNS/Pages/Email Routing/MYNIC clients

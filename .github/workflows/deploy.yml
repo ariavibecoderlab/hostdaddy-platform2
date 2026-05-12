@@ -23,7 +23,7 @@ jobs:
       - run: pnpm typecheck
 
   deploy-workers:
-    name: Deploy Workers (api.hostdaddy.ai)
+    name: Deploy Workers (api.hostdaddy.app)
     needs: typecheck
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest

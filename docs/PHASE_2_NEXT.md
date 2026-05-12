@@ -175,7 +175,7 @@ Skip this if launch order is "general SME first, BB second."
 Surface these to Coach Fadzil in `#hostdaddy-eng` Slack before kicking off:
 
 1. **Confirm Stripe is in MYR-default mode.** If Stripe was activated as a USD account, switch before any line items get created.
-2. **Resend domain** — has `hello@hostdaddy.ai` been verified yet? If not, do step 5.5 of the account setup checklist first.
+2. **Resend domain** — has `hello@hostdaddy.app` been verified yet? If not, do step 5.5 of the account setup checklist first.
 3. **Password reset email subject + body copy** — need a brand-aligned first draft. Owner: marketing (use the `marketing:content-creation` skill).
 4. **Welcome email — include a "what's next" CTA?** Default: "Search for your first domain." Confirm with product.
 5. **Refund policy** — Stripe needs a refund window configured. Spec doc says nothing; default to 7 days for hosting, no refund on domains (industry standard).

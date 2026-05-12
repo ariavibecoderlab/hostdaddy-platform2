@@ -1,4 +1,4 @@
-# HostDaddy.ai
+# HostDaddy.app
 
 Domain registration, hosting, and AI-built websites — built entirely on Cloudflare.
 A White Unicorn Ventures venture, serving Muslim entrepreneurs, Brainy Bunch franchisees, and the Malaysian SME market.

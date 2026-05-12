@@ -1,5 +1,5 @@
 /**
- * HostDaddy.ai API — Cloudflare Worker entry point.
+ * HostDaddy.app API — Cloudflare Worker entry point.
  *
  * Routes are registered as a Hono tree. Phase 1 ships a minimal /health and
  * /domains/check endpoint. Phases 2–7 add auth, billing, DNS, etc.
@@ -14,6 +14,8 @@ import { createDb } from '@hostdaddy/db';
 import type { AppBindings, Env } from './env';
 import { domainsRoute } from './routes/domains';
 import { authRoute } from './routes/auth';
+import { meRoute } from './routes/me';
+import { billingRoute, webhooksRoute } from './routes/billing';
 import { optionalAuth } from './middleware/auth';
 
 const app = new Hono<AppBindings>();
@@ -48,7 +50,10 @@ app.use('*', optionalAuth);
 
 // ─── Routes ────────────────────────────────────────────────────────────────
 app.route('/auth', authRoute);
+app.route('/me', meRoute);
 app.route('/domains', domainsRoute);
+app.route('/billing', billingRoute);
+app.route('/webhooks', webhooksRoute);
 
 // 404
 app.notFound((c) => c.json({ error: 'Not found', path: c.req.path }, 404));

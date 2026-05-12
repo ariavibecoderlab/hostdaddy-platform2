@@ -1,5 +1,5 @@
 /**
- * HostDaddy.ai database schema.
+ * HostDaddy.app database schema.
  * Mirrors Section 9.3 of the build spec, expanded with audit fields.
  *
  * Each row stores money in MYR cents (integer) — never use floats for money.
@@ -306,6 +306,50 @@ export const sessions = sqliteTable(
   }),
 );
 
+// ─── Verification tokens (password reset, email change, email verify) ───────
+
+export const verificationTokens = sqliteTable(
+  'verification_tokens',
+  {
+    id: id(),
+    customer_id: text('customer_id')
+      .notNull()
+      .references(() => customers.id, { onDelete: 'cascade' }),
+    type: text('type', {
+      enum: ['password_reset', 'email_change', 'email_verify'],
+    }).notNull(),
+    token_hash: text('token_hash').notNull(),
+    payload: text('payload'), // JSON — for email_change holds the new email, etc.
+    expires_at: integer('expires_at', { mode: 'timestamp' }).notNull(),
+    used_at: integer('used_at', { mode: 'timestamp' }),
+    created_at: integer('created_at', { mode: 'timestamp' })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    token_unique: uniqueIndex('verification_tokens_hash_unique').on(t.token_hash),
+    customer_idx: index('verification_tokens_customer_idx').on(t.customer_id),
+    expires_idx: index('verification_tokens_expires_idx').on(t.expires_at),
+  }),
+);
+
+// ─── Processed external events (webhook idempotency) ─────────────────────────
+
+export const processedEvents = sqliteTable(
+  'processed_events',
+  {
+    id: text('id').primaryKey(), // upstream event id (Stripe event id, Billplz bill id)
+    provider: text('provider', { enum: ['stripe', 'billplz'] }).notNull(),
+    event_type: text('event_type').notNull(),
+    processed_at: integer('processed_at', { mode: 'timestamp' })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    provider_idx: index('processed_events_provider_idx').on(t.provider),
+  }),
+);
+
 // ─── Audit log ───────────────────────────────────────────────────────────────
 
 export const auditLog = sqliteTable(
@@ -350,6 +394,10 @@ export type SupportTicket = typeof supportTickets.$inferSelect;
 export type NewSupportTicket = typeof supportTickets.$inferInsert;
 export type Session = typeof sessions.$inferSelect;
 export type NewSession = typeof sessions.$inferInsert;
+export type VerificationToken = typeof verificationTokens.$inferSelect;
+export type NewVerificationToken = typeof verificationTokens.$inferInsert;
+export type ProcessedEvent = typeof processedEvents.$inferSelect;
+export type NewProcessedEvent = typeof processedEvents.$inferInsert;
 
 // Unused placeholder to silence TS noUnusedLocals on `real` import
 // (kept available for future numeric-typed fields like usage counters).

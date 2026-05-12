@@ -13,7 +13,7 @@ import { randomUUID } from 'node:crypto';
 const SEED_DATA = {
   admin: {
     id: randomUUID(),
-    email: 'admin@hostdaddy.ai',
+    email: 'admin@hostdaddy.app',
     name: 'HostDaddy Admin',
     role: 'admin' as const,
     country: 'MY',
@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 console.log('───────────────────────────────────────────────────────────');
-console.log('HostDaddy.ai seed data plan');
+console.log('HostDaddy.app seed data plan');
 console.log('───────────────────────────────────────────────────────────');
 console.log(JSON.stringify(SEED_DATA, null, 2));
 console.log('');

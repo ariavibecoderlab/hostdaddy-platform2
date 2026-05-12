@@ -25,7 +25,7 @@ const COLUMNS = [
     links: [
       { label: 'Help centre', href: '/help' as const },
       { label: 'Contact us', href: '/contact' as const },
-      { label: 'Status', href: 'https://status.hostdaddy.ai' as const, external: true },
+      { label: 'Status', href: 'https://status.hostdaddy.app' as const, external: true },
       { label: 'WhatsApp', href: 'https://wa.me/60123456789' as const, external: true },
     ],
   },
@@ -51,14 +51,14 @@ export function SiteFooter() {
                 className="inline-block h-7 w-7 rounded-md bg-gradient-to-br from-electric-500 to-cyan-500"
                 aria-hidden
               />
-              HostDaddy<span className="text-cyan-400">.ai</span>
+              HostDaddy<span className="text-cyan-400">.app</span>
             </Link>
             <p className="mt-4 max-w-sm text-sm text-navy-200">
               Domain registration, hosting, and AI-built websites — built entirely on Cloudflare.
               A White Unicorn Ventures venture.
             </p>
             <p className="mt-4 text-xs text-navy-300">
-              HostDaddy.ai is a brand of White Unicorn Ventures Sdn Bhd.
+              HostDaddy.app is a brand of White Unicorn Ventures Sdn Bhd.
             </p>
           </div>
           {COLUMNS.map((col) => (

@@ -8,11 +8,22 @@
 
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { createDb, customers, sessions, auditLog, eq } from '@hostdaddy/db';
+import {
+  createDb,
+  customers,
+  sessions,
+  auditLog,
+  verificationTokens,
+  eq,
+  and,
+  isNull,
+  gt,
+} from '@hostdaddy/db';
 import { hashPassword, verifyPassword, needsRehash } from '../lib/password';
 import { signAccessToken, ACCESS_TTL_SECONDS } from '../lib/jwt';
 import { setAuthCookie, clearAuthCookie } from '../lib/cookies';
 import { requireAuth, revokeSession } from '../middleware/auth';
+import { sendEmail } from '../lib/email';
 import type { AppBindings } from '../env';
 
 export const authRoute = new Hono<AppBindings>();
@@ -177,6 +188,15 @@ authRoute.post('/register', async (c) => {
 
   setAuthCookie(c, token, { maxAgeSeconds: ACCESS_TTL_SECONDS });
 
+  // Fire-and-forget welcome email. We use ctx.executionCtx.waitUntil where
+  // available so that the response returns immediately.
+  const sendWelcome = sendEmail(c.env, {
+    to: input.email,
+    template: 'welcome',
+    data: { name: input.name },
+  }).catch((err) => console.error('[email:welcome] failed', err));
+  c.executionCtx?.waitUntil(sendWelcome);
+
   return c.json(
     {
       user: {
@@ -318,6 +338,167 @@ authRoute.post('/refresh', requireAuth, async (c) => {
   // Don't rewrite the sessions row; updating expires_at is fine but optional.
   setAuthCookie(c, token, { maxAgeSeconds: ACCESS_TTL_SECONDS });
   return c.json({ ok: true, expiresAt });
+});
+
+// ─── Forgot password flow ────────────────────────────────────────────────────
+
+const RESET_TOKEN_TTL_SECONDS = 60 * 60; // 1 hour
+
+async function sha256Hex(input: string): Promise<string> {
+  const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+  return Array.from(new Uint8Array(bytes))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+const forgotSchema = z.object({ email: emailSchema });
+const resetSchema = z.object({
+  token: z.string().min(32).max(128),
+  password: passwordSchema,
+});
+const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1).max(128),
+  newPassword: passwordSchema,
+});
+
+/**
+ * POST /auth/forgot-password
+ * Always returns 200 to avoid email enumeration. Sends an email if the account
+ * exists.
+ */
+authRoute.post('/forgot-password', async (c) => {
+  const body = await c.req.json().catch(() => ({}));
+  const parsed = forgotSchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid request', details: parsed.error.flatten() }, 400);
+  }
+  const { email } = parsed.data;
+  const db = createDb(c.env.DB);
+
+  const rows = await db.select().from(customers).where(eq(customers.email, email)).limit(1);
+  const customer = rows[0];
+
+  // Always succeed externally; only do real work if account exists.
+  if (customer) {
+    // Generate a 32-byte random token, encoded as base64url.
+    const raw = crypto.getRandomValues(new Uint8Array(32));
+    const token = btoa(String.fromCharCode(...raw))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+    const tokenHash = await sha256Hex(token);
+    const expiresAt = new Date(Date.now() + RESET_TOKEN_TTL_SECONDS * 1000);
+
+    await db.insert(verificationTokens).values({
+      id: crypto.randomUUID(),
+      customer_id: customer.id,
+      type: 'password_reset',
+      token_hash: tokenHash,
+      expires_at: expiresAt,
+    });
+
+    const resetUrl = `${c.env.APP_URL}/reset-password/${token}`;
+    const sending = sendEmail(c.env, {
+      to: customer.email,
+      template: 'password_reset',
+      data: { name: customer.name, resetUrl },
+    }).catch((err) => console.error('[email:password_reset] failed', err));
+    c.executionCtx?.waitUntil(sending);
+
+    await recordAudit(db, {
+      customerId: customer.id,
+      actor: 'customer',
+      action: 'auth.forgot_password.requested',
+      ip: ipOf(c.req.raw),
+    });
+  }
+
+  return c.json({ ok: true });
+});
+
+/**
+ * POST /auth/reset-password
+ * Verifies the token, sets a new password, marks the token as used,
+ * revokes all existing sessions.
+ */
+authRoute.post('/reset-password', async (c) => {
+  const body = await c.req.json().catch(() => ({}));
+  const parsed = resetSchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid request', details: parsed.error.flatten() }, 400);
+  }
+  const { token, password } = parsed.data;
+  const db = createDb(c.env.DB);
+  const tokenHash = await sha256Hex(token);
+
+  const rows = await db
+    .select()
+    .from(verificationTokens)
+    .where(
+      and(
+        eq(verificationTokens.token_hash, tokenHash),
+        eq(verificationTokens.type, 'password_reset'),
+        isNull(verificationTokens.used_at),
+        gt(verificationTokens.expires_at, new Date()),
+      ),
+    )
+    .limit(1);
+
+  const record = rows[0];
+  if (!record) {
+    return c.json({ error: 'Reset link is invalid or has expired' }, 400);
+  }
+
+  const newHash = await hashPassword(password);
+  await db.update(customers).set({ password_hash: newHash, updated_at: new Date() }).where(eq(customers.id, record.customer_id));
+  await db.update(verificationTokens).set({ used_at: new Date() }).where(eq(verificationTokens.id, record.id));
+
+  await recordAudit(db, {
+    customerId: record.customer_id,
+    actor: 'customer',
+    action: 'auth.password_reset.completed',
+    ip: ipOf(c.req.raw),
+  });
+
+  return c.json({ ok: true });
+});
+
+/**
+ * POST /auth/change-password
+ * Authenticated, requires the current password.
+ */
+authRoute.post('/change-password', requireAuth, async (c) => {
+  const user = c.get('user');
+  if (!user) return c.json({ error: 'Not authenticated' }, 401);
+  const body = await c.req.json().catch(() => ({}));
+  const parsed = changePasswordSchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid request', details: parsed.error.flatten() }, 400);
+  }
+  const { currentPassword, newPassword } = parsed.data;
+  const db = createDb(c.env.DB);
+
+  const rows = await db.select().from(customers).where(eq(customers.id, user.customerId)).limit(1);
+  const customer = rows[0];
+  if (!customer || !customer.password_hash) {
+    return c.json({ error: 'Account not found' }, 404);
+  }
+
+  const ok = await verifyPassword(currentPassword, customer.password_hash);
+  if (!ok) {
+    return c.json({ error: 'Current password is incorrect' }, 400);
+  }
+  const newHash = await hashPassword(newPassword);
+  await db.update(customers).set({ password_hash: newHash, updated_at: new Date() }).where(eq(customers.id, customer.id));
+
+  await recordAudit(db, {
+    customerId: customer.id,
+    actor: 'customer',
+    action: 'auth.password.changed',
+    ip: ipOf(c.req.raw),
+  });
+
+  return c.json({ ok: true });
 });
 
 /**

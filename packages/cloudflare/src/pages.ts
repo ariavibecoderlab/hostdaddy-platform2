@@ -112,7 +112,7 @@ export class PagesClient {
   }
 
   /**
-   * Create a Pages project. For HostDaddy.ai we generally use direct uploads
+   * Create a Pages project. For HostDaddy.app we generally use direct uploads
    * (no Git source) so customers can iterate without needing a GitHub account.
    */
   async createProject(input: {

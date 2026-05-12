@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 /**
- * HostDaddy.ai Tailwind preset.
+ * HostDaddy.app Tailwind preset.
  * Brand tokens from Section 1 of the build spec:
  *   Navy          #0A1628
  *   Electric Blue #1A56DB

@@ -30,7 +30,7 @@ export function FeatureTiles() {
     <section className="bg-navy-50/40 py-20">
       <div className="container-page">
         <div className="text-center">
-          <h2 className="heading-section">Why HostDaddy.ai</h2>
+          <h2 className="heading-section">Why HostDaddy.app</h2>
           <p className="mx-auto mt-3 max-w-2xl text-navy-500">
             Built differently from day one. Speed, fairness, and Cloudflare under the hood.
           </p>
