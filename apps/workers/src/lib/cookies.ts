@@ -15,6 +15,23 @@ export interface CookieOpts {
   maxAgeSeconds: number;
 }
 
+/**
+ * Derive the cookie domain so the session is shared between
+ * hostdaddy.app (web) and api.hostdaddy.app (Worker).
+ * Returns undefined for localhost / preview deploys so the browser
+ * just falls back to host-only cookies.
+ */
+function cookieDomain(c: Context<AppBindings>): string | undefined {
+  try {
+    const host = new URL(c.env.APP_URL ?? '').hostname;
+    if (!host || host === 'localhost') return undefined;
+    // Strip leading "www." so cookies cover both apex + www + api
+    return '.' + host.replace(/^www\./, '');
+  } catch {
+    return undefined;
+  }
+}
+
 export function setAuthCookie(
   c: Context<AppBindings>,
   token: string,
@@ -25,13 +42,18 @@ export function setAuthCookie(
     httpOnly: true,
     secure: isProd, // dev (http://localhost) can't set Secure=true cookies
     sameSite: 'Lax',
+    domain: isProd ? cookieDomain(c) : undefined,
     path: '/',
     maxAge: opts.maxAgeSeconds,
   });
 }
 
 export function clearAuthCookie(c: Context<AppBindings>): void {
-  deleteCookie(c, AUTH_COOKIE, { path: '/' });
+  const isProd = c.env.NODE_ENV === 'production';
+  deleteCookie(c, AUTH_COOKIE, {
+    path: '/',
+    domain: isProd ? cookieDomain(c) : undefined,
+  });
 }
 
 export function readAuthCookie(c: Context<AppBindings>): string | undefined {

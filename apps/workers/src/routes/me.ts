@@ -8,7 +8,7 @@
 
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { createDb, customers, auditLog, eq } from '@hostdaddy/db';
+import { createDb, customers, hostingPlans, auditLog, eq, desc } from '@hostdaddy/db';
 import { requireAuth } from '../middleware/auth';
 import type { AppBindings } from '../env';
 
@@ -89,5 +89,33 @@ meRoute.patch('/', requireAuth, async (c) => {
           franchiseCode: customer.franchise_code,
         }
       : null,
+  });
+});
+
+/**
+ * GET /me/hosting-plans
+ * The current customer's hosting plans (any status). The Sites module dashboard
+ * uses this to populate the plan selector when creating a new site.
+ */
+meRoute.get('/hosting-plans', requireAuth, async (c) => {
+  const user = c.get('user');
+  if (!user) return c.json({ error: 'Not authenticated' }, 401);
+  const db = createDb(c.env.DB);
+  const rows = await db
+    .select()
+    .from(hostingPlans)
+    .where(eq(hostingPlans.customer_id, user.customerId))
+    .orderBy(desc(hostingPlans.created_at));
+  return c.json({
+    plans: rows.map((p) => ({
+      id: p.id,
+      plan_type: p.plan_type,
+      sites_limit: p.sites_limit,
+      storage_gb: p.storage_gb,
+      billing_cycle: p.billing_cycle,
+      status: p.status,
+      price_cents: p.price_cents,
+      expires_at: p.expires_at,
+    })),
   });
 });

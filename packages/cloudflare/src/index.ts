@@ -14,6 +14,7 @@ import { DnsClient } from './dns';
 import { PagesClient } from './pages';
 import { EmailRoutingClient } from './email';
 import { MynicClient, type MynicConfig } from './mynic';
+import { CustomHostnamesClient } from './custom-hostnames';
 import type { CloudflareConfig } from './types';
 
 export interface HostDaddyCloudflare {
@@ -22,6 +23,7 @@ export interface HostDaddyCloudflare {
   dns: DnsClient;
   pages: PagesClient;
   email: EmailRoutingClient;
+  hostnames: CustomHostnamesClient;
   mynic?: MynicClient;
 }
 
@@ -38,6 +40,7 @@ export function createCloudflare(input: CreateCloudflareInput): HostDaddyCloudfl
     dns: new DnsClient(client),
     pages: new PagesClient(client),
     email: new EmailRoutingClient(client),
+    hostnames: new CustomHostnamesClient(client),
     mynic: input.mynic ? new MynicClient(input.mynic) : undefined,
   };
 }
@@ -49,6 +52,15 @@ export { DnsClient } from './dns';
 export { PagesClient } from './pages';
 export { EmailRoutingClient } from './email';
 export { MynicClient } from './mynic';
+export { CustomHostnamesClient } from './custom-hostnames';
+export type {
+  CustomHostname,
+  CustomHostnameStatus,
+  CustomHostnameSsl,
+  CreateCustomHostnameInput,
+  OwnershipVerification,
+  SslValidationRecord,
+} from './custom-hostnames';
 export {
   CloudflareApiError,
   type CloudflareConfig,

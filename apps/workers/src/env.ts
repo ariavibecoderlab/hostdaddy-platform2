@@ -8,18 +8,27 @@ export interface Env {
   // Bindings
   DB: D1Database;
   SESSIONS: KVNamespace;
-  ASSETS: R2Bucket;
+  ASSETS: R2Bucket; // Sites-module media library
 
   // Vars
   NODE_ENV: 'development' | 'production';
   APP_URL: string;
+  MEDIA_PUBLIC_BASE_URL?: string; // base URL where R2 objects are publicly served
+  AI_MODEL?: string; // default model id for the AI build agent
 
   // Secrets
   CLOUDFLARE_ACCOUNT_ID: string;
   CLOUDFLARE_API_TOKEN: string;
+  /** Cloudflare Zone ID for the SaaS parent zone (hostdaddy.app). Used by CF-for-SaaS Custom Hostnames. */
+  CF_SAAS_ZONE_ID: string;
+  /** CNAME target shown to customers when attaching a BYO domain. Defaults to 'hostdaddy.app'. */
+  CF_SAAS_CNAME_TARGET?: string;
   JWT_SECRET: string;
   STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
+  // Sites module
+  ANTHROPIC_API_KEY?: string; // optional — if absent, AI agent runs in mock mode
+  TURNSTILE_SECRET?: string;  // optional — form submissions fail-open if absent
   // Stripe Price IDs (one per plan × cycle)
   STRIPE_PRICE_STARTER_MONTHLY?: string;
   STRIPE_PRICE_STARTER_YEARLY?: string;

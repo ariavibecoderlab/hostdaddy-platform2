@@ -1,4 +1,4 @@
-# Contributing to HostDaddy.ai
+# Contributing to HostDaddy.app
 
 Welcome. This doc gets you from `git clone` to a working dev environment in under 10 minutes.
 
@@ -30,7 +30,7 @@ pnpm install
 
 ## 3. Get your secrets
 
-Secrets live in the **HostDaddy.ai — Engineering** 1Password vault. Ask your team lead to add you.
+Secrets live in the **HostDaddy.app — Engineering** 1Password vault. Ask your team lead to add you.
 
 ```bash
 # Once you have vault access:
@@ -48,7 +48,7 @@ cd apps/workers
 pnpm exec wrangler login
 ```
 
-This OAuths your personal Cloudflare account against the HostDaddy.ai organisation. You'll have whatever permissions the account owner granted you.
+This OAuths your personal Cloudflare account against the HostDaddy.app organisation. You'll have whatever permissions the account owner granted you.
 
 ## 4. Run it
 

@@ -136,6 +136,11 @@ export const sites = sqliteTable(
       .references(() => hostingPlans.id, { onDelete: 'cascade' }),
     domain_id: text('domain_id').references(() => domains.id, { onDelete: 'set null' }),
     name: text('name').notNull(),
+    // HostDaddy v1 model = one CF Pages project per site. With CF-for-SaaS
+    // multi-tenant rendering, a single shared Worker serves all customer
+    // sites by Host header — so this is now treated as a logical id slot.
+    // The unique index still applies; provisioning generates a UUID-based
+    // placeholder when no real Pages project is created.
     cf_pages_project: text('cf_pages_project').notNull(),
     github_repo: text('github_repo'),
     template: text('template'), // e.g. 'brainy_bunch_school'
@@ -146,12 +151,31 @@ export const sites = sqliteTable(
       .default('provisioning'),
     last_deployed_at: integer('last_deployed_at', { mode: 'timestamp' }),
     last_deployment_id: text('last_deployment_id'),
+
+    // ─── CF for SaaS (Custom Hostnames) ──────────────────────────────────────
+    // The customer brings their own domain; HostDaddy attaches it to the
+    // hostdaddy.app SaaS zone via Cloudflare's Custom Hostnames API. Once SSL
+    // is issued and active, requests to custom_hostname route to our Worker.
+    /** The actual customer-facing hostname they pointed at us, e.g. 'bb-kelana.com'. */
+    custom_hostname: text('custom_hostname'),
+    /** Cloudflare's UUID for the Custom Hostname record (used to poll/delete). */
+    cf_hostname_id: text('cf_hostname_id'),
+    /** Mirrors CF SSL status: pending|pending_validation|pending_issuance|pending_deployment|active|deleted|blocked|moved. */
+    ssl_status: text('ssl_status'),
+    /** Verification record the customer must add at their DNS (TXT or CNAME). */
+    verification_record_type: text('verification_record_type'),
+    verification_record_name: text('verification_record_name'),
+    verification_record_value: text('verification_record_value'),
+    /** When CF moved the hostname to `active` for the first time. */
+    provisioned_at: integer('provisioned_at', { mode: 'timestamp' }),
     ...timestamps,
   },
   (t) => ({
     customer_idx: index('sites_customer_idx').on(t.customer_id),
     plan_idx: index('sites_plan_idx').on(t.hosting_plan_id),
     pages_unique: uniqueIndex('sites_cf_pages_unique').on(t.cf_pages_project),
+    custom_hostname_unique: uniqueIndex('sites_custom_hostname_unique').on(t.custom_hostname),
+    cf_hostname_unique: uniqueIndex('sites_cf_hostname_unique').on(t.cf_hostname_id),
   }),
 );
 
@@ -402,3 +426,11 @@ export type NewProcessedEvent = typeof processedEvents.$inferInsert;
 // Unused placeholder to silence TS noUnusedLocals on `real` import
 // (kept available for future numeric-typed fields like usage counters).
 export const _real = real;
+
+// ─── Sites content schema (Sites module — Phase A) ───────────────────────────
+// The visual builder, blog, e-commerce, forms, email marketing, AI agent
+// audit log, and version history all live in `sites-content.ts`. Re-export
+// from here so `import * as schema from './schema'` (used by drizzle-kit and
+// `createDb`) picks up the additional tables.
+
+export * from './sites-content';

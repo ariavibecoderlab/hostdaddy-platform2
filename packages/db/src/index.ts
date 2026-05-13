@@ -17,6 +17,7 @@ export function createDb(d1: D1Database): HostDaddyDb {
 }
 
 export * from './schema';
+export * from './plans';
 export { schema };
 
 /** Re-export convenience operators for callers. */

@@ -16,9 +16,16 @@ import { domainsRoute } from './routes/domains';
 import { authRoute } from './routes/auth';
 import { meRoute } from './routes/me';
 import { billingRoute, webhooksRoute } from './routes/billing';
+import { sitesRoute } from './routes/sites';
+import { renderRoute } from './routes/render';
 import { optionalAuth } from './middleware/auth';
+import { hostRouter } from './middleware/host-router';
 
 const app = new Hono<AppBindings>();
+
+// CF for SaaS — must run BEFORE everything else so customer-domain traffic is
+// dispatched to the site renderer without ever touching CORS/auth/API logic.
+app.use('*', hostRouter);
 
 app.use('*', logger());
 app.use('*', secureHeaders());
@@ -28,8 +35,24 @@ app.use(
     origin: (origin, c) => {
       const env = c.env as Env;
       const appUrl = env.APP_URL ?? 'http://localhost:5173';
-      const allowed = new Set([appUrl, 'http://localhost:5173']);
-      return origin && allowed.has(origin) ? origin : appUrl;
+      if (!origin) return appUrl;
+      // Static allow-list
+      const allowed = new Set([
+        appUrl,
+        'http://localhost:5173',
+        'https://hostdaddy.app',
+        'https://www.hostdaddy.app',
+      ]);
+      if (allowed.has(origin)) return origin;
+      // Allow any *.hostdaddy-web.pages.dev preview deploy
+      try {
+        const host = new URL(origin).hostname;
+        if (host.endsWith('.hostdaddy-web.pages.dev')) return origin;
+        if (host === 'hostdaddy-web.pages.dev') return origin;
+      } catch {
+        // fall through
+      }
+      return appUrl;
     },
     credentials: true,
   }),
@@ -54,6 +77,8 @@ app.route('/me', meRoute);
 app.route('/domains', domainsRoute);
 app.route('/billing', billingRoute);
 app.route('/webhooks', webhooksRoute);
+app.route('/sites', sitesRoute);
+app.route('/render', renderRoute);
 
 // 404
 app.notFound((c) => c.json({ error: 'Not found', path: c.req.path }, 404));

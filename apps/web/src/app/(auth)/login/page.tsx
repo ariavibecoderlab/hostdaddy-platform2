@@ -1,12 +1,34 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { Suspense, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button, Input } from '@hostdaddy/ui';
 import { authApi, ApiHttpError } from '@/lib/api';
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginSkeleton />}>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginSkeleton() {
+  return (
+    <div className="rounded-2xl bg-white p-8 shadow-2xl shadow-navy-900/30">
+      <div className="h-7 w-40 animate-pulse rounded bg-navy-100" />
+      <div className="mt-2 h-4 w-64 animate-pulse rounded bg-navy-100" />
+      <div className="mt-6 space-y-4">
+        <div className="h-10 animate-pulse rounded bg-navy-100" />
+        <div className="h-10 animate-pulse rounded bg-navy-100" />
+        <div className="h-11 animate-pulse rounded bg-navy-100" />
+      </div>
+    </div>
+  );
+}
+
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next') ?? '/dashboard';

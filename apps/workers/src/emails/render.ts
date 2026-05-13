@@ -58,7 +58,7 @@ function wrap(args: { previewText: string; bodyHtml: string; ctx: RenderContext 
             <tr>
               <td style="background:${BRAND_NAVY};padding:18px 28px;color:#ffffff;font-weight:600;font-size:16px;">
                 <span style="display:inline-block;width:18px;height:18px;border-radius:4px;background:linear-gradient(135deg,${BRAND_ELECTRIC},${BRAND_CYAN});vertical-align:-3px;margin-right:8px;"></span>
-                HostDaddy<span style="color:${BRAND_CYAN};">.ai</span>
+                HostDaddy<span style="color:${BRAND_CYAN};">.app</span>
               </td>
             </tr>
             <tr>

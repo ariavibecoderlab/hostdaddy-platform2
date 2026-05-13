@@ -8,6 +8,7 @@ const NAV = [
   { label: 'Overview', href: '/dashboard' as const, icon: 'home' },
   { label: 'Domains', href: '/dashboard/domains' as const, icon: 'globe' },
   { label: 'Hosting', href: '/dashboard/hosting' as const, icon: 'server' },
+  { label: 'Sites', href: '/dashboard/sites' as const, icon: 'layers' },
   { label: 'Email', href: '/dashboard/email' as const, icon: 'mail' },
   { label: 'Billing', href: '/dashboard/billing' as const, icon: 'credit-card' },
   { label: 'Settings', href: '/dashboard/settings' as const, icon: 'sliders' },
@@ -75,6 +76,14 @@ function Icon({ name, className }: { name: string; className?: string }) {
           <line x1="1" y1="14" x2="7" y2="14" />
           <line x1="9" y1="8" x2="15" y2="8" />
           <line x1="17" y1="16" x2="23" y2="16" />
+        </svg>
+      );
+    case 'layers':
+      return (
+        <svg {...props}>
+          <polygon points="12 2 2 7 12 12 22 7 12 2" />
+          <polyline points="2 17 12 22 22 17" />
+          <polyline points="2 12 12 17 22 12" />
         </svg>
       );
     default:

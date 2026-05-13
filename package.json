@@ -2,7 +2,7 @@
   "name": "hostdaddy-platform",
   "version": "0.1.0",
   "private": true,
-  "description": "HostDaddy.ai — domain registration, hosting, and AI-built websites on Cloudflare. White Unicorn Ventures.",
+  "description": "HostDaddy.app — domain registration, hosting, and AI-built websites on Cloudflare. White Unicorn Ventures.",
   "license": "UNLICENSED",
   "packageManager": "pnpm@9.12.0",
   "engines": {

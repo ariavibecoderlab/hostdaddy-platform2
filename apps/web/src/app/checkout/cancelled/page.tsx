@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { Card, CardContent, Button } from '@hostdaddy/ui';
 
+export const runtime = 'edge';
+
 interface SearchParams {
   searchParams: { plan?: string; cycle?: string };
 }

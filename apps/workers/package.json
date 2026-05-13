@@ -13,6 +13,7 @@
     "clean": "rm -rf .turbo .wrangler dist"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
     "@hostdaddy/cloudflare": "workspace:*",
     "@hostdaddy/db": "workspace:*",
     "@hostdaddy/stripe": "workspace:*",
